@@ -309,6 +309,10 @@ html,body{
 <body>
 
 <div class="stage" id="stage">
+  <!-- 🎵 MÚSICA: reemplaza la URL de abajo por el link directo a tu archivo .mp3 -->
+  <audio id="bg-music" loop preload="auto">
+    <source src="https://TU-ENLACE-AQUI.mp3" type="audio/mpeg">
+  </audio>
   <div class="vignette"></div>
   <div class="frame">
     <span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span>
@@ -345,7 +349,7 @@ html,body{
         </svg>
       </div>
       <div class="eyebrow">Mis XV años</div>
-      <h1 class="title-name">Jade Jazmín<br>Brañes Nina</h1>
+      <h1 class="title-name">Jade Jazmín</h1>
       <div class="divider"></div>
       <p class="poetic">Bajo la luz de las velas y el eco de un vals olvidado,<br>
       tengo el honor de invitarte a develar mi rostro por primera vez,<br>
@@ -354,9 +358,9 @@ html,body{
 
     <!-- SCENE 2 : FECHA -->
     <section class="scene" data-scene="2">
-      <div class="eyebrow">El baile se celebrará</div>
-      <div class="date-big">Sábado 14 de Noviembre</div>
-      <div class="time-small">2026 · 19:00 HRS</div>
+      <div class="eyebrow">La fiesta se celebrará</div>
+      <div class="date-big">Sábado 18 de Julio</div>
+      <div class="time-small">2026 · 16:00 HRS</div>
       <div class="countdown" id="countdown">
         <div class="count-box"><span class="count-num" id="cd-days">00</span><span class="count-label">Días</span></div>
         <div class="count-box"><span class="count-num" id="cd-hours">00</span><span class="count-label">Horas</span></div>
@@ -368,11 +372,11 @@ html,body{
     <!-- SCENE 3 : LUGAR -->
     <section class="scene" data-scene="3">
       <div class="eyebrow">El salón de baile</div>
-      <div class="venue-name">Salón Palacio Dorado</div>
-      <div class="venue-addr">Av. Arce N.º 1780, La Paz, Bolivia</div>
-      <div class="venue-addr" style="opacity:0.7; font-size:0.9em;">(dirección editable)</div>
+      <div class="venue-name">Salón de Eventos "VICTORIA"</div>
+      <div class="venue-addr">Av. Cívica N.º 63, Zona Villa Tejada Rectangular, entre las calles 9 y 10</div>
+      <div class="venue-addr" style="opacity:0.7; font-size:0.9em;"> (bajando de la plaza Obelisco de El Alto)</div>
       <div class="dresscode">Etiqueta rigurosa · Máscara obligatoria</div>
-      <a class="map-btn" id="map-link" href="https://www.google.com/maps/search/?api=1&query=Sal%C3%B3n%20Palacio%20Dorado%20Av%20Arce%201780%20La%20Paz%20Bolivia" target="_blank" rel="noopener">Cómo llegar</a>
+      <a class="map-btn" id="map-link" href="https://maps.app.goo.gl/nhfGf2aCvpUv1oFH7" target="_blank" rel="noopener">Cómo llegar</a>
     </section>
 
     <!-- SCENE 4 : CIERRE / RSVP -->
@@ -380,7 +384,6 @@ html,body{
       <div class="eyebrow">Confirma tu asistencia</div>
       <p class="rsvp-line">Guarda tu máscara y tu mejor guardarropa de gala.<br>
       Te espero para compartir una noche que no se olvida.</p>
-      <div class="rsvp-contact">Confirmar al +591 000 00000</div>
       <div class="signature-seal">J</div>
     </section>
 
@@ -391,6 +394,7 @@ html,body{
     <div class="dots" id="dots"></div>
     <button class="nav-btn" id="next-btn" aria-label="Siguiente">›</button>
     <button class="play-toggle" id="play-btn" aria-label="Pausar">❚❚</button>
+    <button class="play-toggle" id="mute-btn" aria-label="Silenciar">♪</button>
   </div>
 
 </div>
@@ -458,11 +462,23 @@ html,body{
   // open seal
   function openSeal(){
     stage.classList.add('opened');
+    const music = document.getElementById('bg-music');
+    if(music){ music.volume = 0.6; music.play().catch(()=>{}); }
     setTimeout(() => {
       goTo(1);
       controls.classList.remove('hidden');
       startAutoplay();
     }, 850);
+  }
+
+  const muteBtn = document.getElementById('mute-btn');
+  if(muteBtn){
+    muteBtn.addEventListener('click', () => {
+      const music = document.getElementById('bg-music');
+      if(!music) return;
+      music.muted = !music.muted;
+      muteBtn.textContent = music.muted ? '✕' : '♪';
+    });
   }
   document.getElementById('seal-scene').addEventListener('click', function handler(){
     this.removeEventListener('click', handler);
@@ -488,7 +504,7 @@ html,body{
   for(let i=0;i<10;i++) setTimeout(spawnEmber, i*150);
 
   // countdown — EDITABLE TARGET DATE
-  const targetDate = new Date('2026-11-14T19:00:00');
+  const targetDate = new Date('2026-07-18T18:00:00');
   function updateCountdown(){
     const now = new Date();
     let diff = targetDate - now;
