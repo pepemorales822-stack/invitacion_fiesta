@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>XV Años · Jade Jazmín — Baile de Máscaras</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cinzel+Decorative:wght@400;700;900&family=EB+Garamond:ital@0;1&display=swap');
+
+:root{
+  --black: #0a0806;
+  --black2: #150f0a;
+  --black3: #1e150d;
+  --gold: #c9a24b;
+  --gold-light: #f0dca0;
+  --gold-deep: #8a6a1f;
+  --burgundy: #3a0e14;
+  --cream: #ece1c5;
+  --shadow-deep: rgba(0,0,0,0.7);
+}
+
+*{box-sizing:border-box;}
+html,body{
+  margin:0; padding:0; height:100%;
+  background:var(--black);
+  overflow:hidden;
+  font-family:'EB Garamond', serif;
+  color:var(--cream);
+}
+
+.stage{
+  position:relative;
+  width:100%; height:100vh; height:100dvh;
+  overflow:hidden;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(120,90,30,0.18), transparent 60%),
+    radial-gradient(ellipse at 50% 100%, rgba(60,20,10,0.35), transparent 70%),
+    linear-gradient(180deg, var(--black2), var(--black) 60%, #060402);
+}
+
+/* vignette overlay */
+.vignette{
+  position:absolute; inset:0; pointer-events:none; z-index:5;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.75) 100%);
+}
+
+/* ornate corner frame */
+.frame span{
+  position:absolute; width:70px; height:70px; z-index:6; pointer-events:none;
+  border:2px solid var(--gold-deep);
+  opacity:0.75;
+}
+.frame .tl{top:14px; left:14px; border-right:none; border-bottom:none;}
+.frame .tr{top:14px; right:14px; border-left:none; border-bottom:none;}
+.frame .bl{bottom:14px; left:14px; border-right:none; border-top:none;}
+.frame .br{bottom:14px; right:14px; border-left:none; border-top:none;}
+.frame span::before{
+  content:''; position:absolute; width:10px; height:10px; border-radius:50%;
+  background:var(--gold); box-shadow:0 0 8px var(--gold);
+}
+.frame .tl::before{top:-6px; left:-6px;}
+.frame .tr::before{top:-6px; right:-6px;}
+.frame .bl::before{bottom:-6px; left:-6px;}
+.frame .br::before{bottom:-6px; right:-6px;}
+
+/* embers */
+.embers{position:absolute; inset:0; z-index:4; pointer-events:none; overflow:hidden;}
+.ember{
+  position:absolute; bottom:-10px;
+  width:4px; height:4px; border-radius:50%;
+  background:radial-gradient(circle, var(--gold-light), var(--gold) 60%, transparent);
+  box-shadow:0 0 6px 1px rgba(240,220,160,0.8);
+  animation: rise linear forwards;
+  opacity:0.9;
+}
+@keyframes rise{
+  0%{ transform: translateY(0) translateX(0) scale(1); opacity:0; }
+  10%{ opacity:1; }
+  100%{ transform: translateY(-105vh) translateX(var(--drift,20px)) scale(0.3); opacity:0; }
+}
+
+/* scenes */
+.scenes{position:relative; width:100%; height:100%; z-index:3;}
+.scene{
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  flex-direction:column;
+  text-align:center;
+  padding:6vh 6vw;
+  opacity:0;
+  visibility:hidden;
+  transform:scale(1.03);
+  transition:opacity 1.1s ease, transform 1.4s ease;
+}
+.scene.active{
+  opacity:1; visibility:visible; transform:scale(1);
+}
+
+.eyebrow{
+  font-family:'Cinzel', serif;
+  letter-spacing:0.32em;
+  font-size:clamp(10px,2.2vw,13px);
+  color:var(--gold);
+  text-transform:uppercase;
+  margin-bottom:18px;
+  opacity:0.9;
+}
+
+/* ---- Scene 0: Seal ---- */
+.scene--seal{cursor:pointer;}
+.seal-wrap{position:relative; width:min(46vw,220px); height:min(46vw,220px); display:flex; align-items:center; justify-content:center;}
+.seal-half{
+  position:absolute; inset:0;
+  transition: transform 1s cubic-bezier(.6,0,.2,1), opacity 1s ease;
+}
+.seal-half.left{clip-path:inset(0 50% 0 0);}
+.seal-half.right{clip-path:inset(0 0 0 50%);}
+.seal-ring{
+  position:absolute; inset:0;
+  border-radius:50%;
+  background: radial-gradient(circle at 35% 30%, #7a2229, var(--burgundy) 55%, #260709 100%);
+  border:3px solid var(--gold);
+  box-shadow: 0 0 30px rgba(0,0,0,0.6), inset 0 0 20px rgba(0,0,0,0.5), 0 0 40px rgba(180,140,50,0.15);
+}
+.seal-monogram{
+  position:relative; z-index:2;
+  font-family:'Cinzel Decorative', serif;
+  font-size:min(14vw,64px);
+  color:var(--gold-light);
+  text-shadow:0 0 18px rgba(230,190,110,0.5);
+}
+.stage.opened .seal-half.left{ transform:translateX(-60px) rotate(-8deg); opacity:0; }
+.stage.opened .seal-half.right{ transform:translateX(60px) rotate(8deg); opacity:0; }
+
+.tap-hint{
+  margin-top:34px;
+  font-family:'Cinzel', serif;
+  font-size:clamp(11px,2vw,13px);
+  letter-spacing:0.2em;
+  color:var(--gold);
+  opacity:0.8;
+  animation: pulse 2.4s ease-in-out infinite;
+}
+@keyframes pulse{ 0%,100%{opacity:0.4;} 50%{opacity:0.95;} }
+
+/* ---- Masks decoration ---- */
+.mask-deco{ width:min(20vw,90px); opacity:0.85; filter:drop-shadow(0 0 10px rgba(0,0,0,0.6)); }
+.mask-row{ display:flex; gap:6vw; align-items:center; justify-content:center; margin-bottom:22px; }
+
+/* ---- Titles ---- */
+.title-name{
+  font-family:'Cinzel Decorative', serif;
+  font-weight:700;
+  font-size:clamp(28px,6.2vw,52px);
+  line-height:1.15;
+  color:var(--gold-light);
+  text-shadow:0 0 24px rgba(220,180,100,0.35);
+  margin:6px 0 22px;
+}
+.divider{
+  width:120px; height:1px;
+  background:linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin:18px auto;
+}
+.poetic{
+  font-family:'EB Garamond', serif;
+  font-style:italic;
+  font-size:clamp(15px,2.6vw,19px);
+  line-height:1.7;
+  max-width:560px;
+  color:var(--cream);
+  opacity:0.92;
+}
+.headline{
+  font-family:'Cinzel', serif;
+  font-size:clamp(12px,2vw,14px);
+  letter-spacing:0.28em;
+  color:var(--gold);
+  text-transform:uppercase;
+}
+
+/* ---- Scene 2: date/countdown ---- */
+.date-big{
+  font-family:'Cinzel Decorative', serif;
+  font-size:clamp(24px,5vw,40px);
+  color:var(--gold-light);
+  margin:14px 0 4px;
+}
+.time-small{
+  font-family:'Cinzel', serif;
+  letter-spacing:0.15em;
+  font-size:clamp(13px,2.2vw,16px);
+  color:var(--cream);
+  opacity:0.85;
+  margin-bottom:30px;
+}
+.countdown{
+  display:flex; gap:clamp(10px,3vw,26px); justify-content:center; flex-wrap:wrap;
+}
+.count-box{
+  min-width:64px;
+  padding:14px 10px;
+  border:1px solid var(--gold-deep);
+  background:rgba(60,40,15,0.18);
+  border-radius:4px;
+}
+.count-num{
+  font-family:'Cinzel', serif; font-weight:600;
+  font-size:clamp(20px,3.6vw,30px); color:var(--gold-light);
+  display:block;
+}
+.count-label{
+  font-family:'Cinzel', serif; font-size:9px; letter-spacing:0.18em;
+  color:var(--gold); text-transform:uppercase; opacity:0.8;
+}
+
+/* ---- Scene 3: location ---- */
+.venue-name{
+  font-family:'Cinzel Decorative', serif;
+  font-size:clamp(20px,4vw,30px);
+  color:var(--gold-light);
+  margin:12px 0 6px;
+}
+.venue-addr{
+  font-family:'EB Garamond', serif;
+  font-size:clamp(14px,2.4vw,17px);
+  color:var(--cream); opacity:0.9;
+  margin-bottom:6px;
+}
+.dresscode{
+  margin-top:22px;
+  font-family:'Cinzel', serif;
+  font-size:clamp(10px,1.8vw,12px);
+  letter-spacing:0.14em;
+  color:var(--gold);
+  text-transform:uppercase;
+  opacity:0.85;
+}
+.map-btn{
+  margin-top:28px;
+  display:inline-flex; align-items:center; gap:10px;
+  padding:14px 32px;
+  font-family:'Cinzel', serif; letter-spacing:0.18em; font-size:12px;
+  text-transform:uppercase;
+  color:var(--black);
+  background:linear-gradient(180deg, var(--gold-light), var(--gold) 70%);
+  border:none; border-radius:2px;
+  text-decoration:none;
+  cursor:pointer;
+  box-shadow:0 6px 24px rgba(180,140,50,0.25);
+  transition:transform .3s ease, box-shadow .3s ease;
+}
+.map-btn:hover{ transform:translateY(-2px); box-shadow:0 10px 28px rgba(180,140,50,0.35); }
+
+/* ---- Scene 4: closing ---- */
+.rsvp-line{
+  font-family:'EB Garamond', serif; font-style:italic;
+  font-size:clamp(15px,2.6vw,19px);
+  max-width:520px; color:var(--cream); opacity:0.92; margin-bottom:26px;
+}
+.rsvp-contact{
+  font-family:'Cinzel', serif; letter-spacing:0.1em; font-size:clamp(13px,2.2vw,15px);
+  color:var(--gold-light);
+}
+.signature-seal{
+  margin-top:30px; width:56px; height:56px; border-radius:50%;
+  background: radial-gradient(circle at 35% 30%, #7a2229, var(--burgundy) 55%, #260709 100%);
+  border:2px solid var(--gold);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Cinzel Decorative', serif; color:var(--gold-light); font-size:22px;
+}
+
+/* ---- controls ---- */
+.controls{
+  position:absolute; left:0; right:0; bottom:22px;
+  z-index:10;
+  display:flex; align-items:center; justify-content:center;
+  gap:18px;
+}
+.nav-btn, .play-toggle{
+  background:transparent; border:1px solid var(--gold-deep);
+  color:var(--gold); width:34px; height:34px; border-radius:50%;
+  font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  opacity:0.8; transition:opacity .3s, border-color .3s;
+}
+.nav-btn:hover, .play-toggle:hover{ opacity:1; border-color:var(--gold); }
+.dots{ display:flex; gap:9px; }
+.dot{
+  width:7px; height:7px; border-radius:50%;
+  background:rgba(200,160,70,0.3);
+  cursor:pointer; transition:background .3s, transform .3s;
+}
+.dot.active{ background:var(--gold); transform:scale(1.3); }
+.controls.hidden{ opacity:0; pointer-events:none; }
+.controls{ transition:opacity .5s ease; }
+
+@media (max-width:480px){
+  .controls{ bottom:14px; gap:12px; }
+  .mask-row{ gap:8vw; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .ember{ animation:none; display:none; }
+  .tap-hint{ animation:none; }
+  .scene{ transition:opacity .4s ease; }
+}
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+  <div class="vignette"></div>
+  <div class="frame">
+    <span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span>
+  </div>
+  <div class="embers" id="embers"></div>
+
+  <div class="scenes">
+
+    <!-- SCENE 0 : SEAL -->
+    <section class="scene active scene--seal" data-scene="0" id="seal-scene">
+      <div class="eyebrow">Una noche · Una máscara · Un baile</div>
+      <div class="seal-wrap" id="seal">
+        <div class="seal-half left"><div class="seal-ring"></div></div>
+        <div class="seal-half right"><div class="seal-ring"></div></div>
+        <div class="seal-monogram">J</div>
+      </div>
+      <div class="tap-hint">Toca el sello para abrir la invitación</div>
+    </section>
+
+    <!-- SCENE 1 : PRESENTACIÓN -->
+    <section class="scene" data-scene="1">
+      <div class="mask-row">
+        <svg class="mask-deco" viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5,35 C5,10 30,2 50,10 C55,4 70,2 78,10 C90,18 95,32 88,45 C80,58 60,60 50,50 C40,60 15,55 8,42 Z" fill="none" stroke="#c9a24b" stroke-width="1.6"/>
+          <circle cx="30" cy="30" r="6" fill="#c9a24b" opacity="0.5"/>
+          <circle cx="66" cy="28" r="6" fill="#c9a24b" opacity="0.5"/>
+          <path d="M50,10 C48,20 48,30 50,50" stroke="#c9a24b" stroke-width="1" fill="none" opacity="0.6"/>
+        </svg>
+        <svg class="mask-deco" viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg" style="transform:scaleX(-1)">
+          <path d="M5,35 C5,10 30,2 50,10 C55,4 70,2 78,10 C90,18 95,32 88,45 C80,58 60,60 50,50 C40,60 15,55 8,42 Z" fill="none" stroke="#c9a24b" stroke-width="1.6"/>
+          <circle cx="30" cy="30" r="6" fill="#c9a24b" opacity="0.5"/>
+          <circle cx="66" cy="28" r="6" fill="#c9a24b" opacity="0.5"/>
+          <path d="M50,10 C48,20 48,30 50,50" stroke="#c9a24b" stroke-width="1" fill="none" opacity="0.6"/>
+        </svg>
+      </div>
+      <div class="eyebrow">Mis XV años</div>
+      <h1 class="title-name">Jade Jazmín<br>Brañes Nina</h1>
+      <div class="divider"></div>
+      <p class="poetic">Bajo la luz de las velas y el eco de un vals olvidado,<br>
+      tengo el honor de invitarte a develar mi rostro por primera vez,<br>
+      en una noche donde todos somos, por unas horas, un misterio.</p>
+    </section>
+
+    <!-- SCENE 2 : FECHA -->
+    <section class="scene" data-scene="2">
+      <div class="eyebrow">El baile se celebrará</div>
+      <div class="date-big">Sábado 14 de Noviembre</div>
+      <div class="time-small">2026 · 19:00 HRS</div>
+      <div class="countdown" id="countdown">
+        <div class="count-box"><span class="count-num" id="cd-days">00</span><span class="count-label">Días</span></div>
+        <div class="count-box"><span class="count-num" id="cd-hours">00</span><span class="count-label">Horas</span></div>
+        <div class="count-box"><span class="count-num" id="cd-min">00</span><span class="count-label">Min</span></div>
+        <div class="count-box"><span class="count-num" id="cd-sec">00</span><span class="count-label">Seg</span></div>
+      </div>
+    </section>
+
+    <!-- SCENE 3 : LUGAR -->
+    <section class="scene" data-scene="3">
+      <div class="eyebrow">El salón de baile</div>
+      <div class="venue-name">Salón Palacio Dorado</div>
+      <div class="venue-addr">Av. Arce N.º 1780, La Paz, Bolivia</div>
+      <div class="venue-addr" style="opacity:0.7; font-size:0.9em;">(dirección editable)</div>
+      <div class="dresscode">Etiqueta rigurosa · Máscara obligatoria</div>
+      <a class="map-btn" id="map-link" href="https://www.google.com/maps/search/?api=1&query=Sal%C3%B3n%20Palacio%20Dorado%20Av%20Arce%201780%20La%20Paz%20Bolivia" target="_blank" rel="noopener">Cómo llegar</a>
+    </section>
+
+    <!-- SCENE 4 : CIERRE / RSVP -->
+    <section class="scene" data-scene="4">
+      <div class="eyebrow">Confirma tu asistencia</div>
+      <p class="rsvp-line">Guarda tu máscara y tu mejor guardarropa de gala.<br>
+      Te espero para compartir una noche que no se olvida.</p>
+      <div class="rsvp-contact">Confirmar al +591 000 00000</div>
+      <div class="signature-seal">J</div>
+    </section>
+
+  </div>
+
+  <div class="controls" id="controls">
+    <button class="nav-btn" id="prev-btn" aria-label="Anterior">‹</button>
+    <div class="dots" id="dots"></div>
+    <button class="nav-btn" id="next-btn" aria-label="Siguiente">›</button>
+    <button class="play-toggle" id="play-btn" aria-label="Pausar">❚❚</button>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  const stage = document.getElementById('stage');
+  const scenes = Array.from(document.querySelectorAll('.scene'));
+  const dotsWrap = document.getElementById('dots');
+  const controls = document.getElementById('controls');
+  const seal = document.getElementById('seal');
+  let current = 0;
+  let playing = false;
+  let timer = null;
+  const SCENE_DURATION = 7000;
+
+  // build dots (skip seal scene index 0 from dot nav visually but keep index mapping)
+  scenes.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i===0 ? ' active' : '');
+    d.addEventListener('click', () => goTo(i, true));
+    dotsWrap.appendChild(d);
+  });
+  const dots = Array.from(dotsWrap.children);
+  controls.classList.add('hidden');
+
+  function updateDots(){
+    dots.forEach((d,i) => d.classList.toggle('active', i===current));
+  }
+
+  function goTo(i, manual){
+    if(i < 0) i = scenes.length - 1;
+    if(i >= scenes.length) i = scenes.length - 1;
+    scenes[current].classList.remove('active');
+    current = i;
+    scenes[current].classList.add('active');
+    updateDots();
+    if(manual) restartAutoplay();
+  }
+
+  function next(){
+    if(current < scenes.length - 1){ goTo(current + 1); }
+    else { stopAutoplay(); }
+  }
+
+  function startAutoplay(){
+    stopAutoplay();
+    playing = true;
+    document.getElementById('play-btn').textContent = '❚❚';
+    timer = setInterval(next, SCENE_DURATION);
+  }
+  function stopAutoplay(){
+    playing = false;
+    if(document.getElementById('play-btn')) document.getElementById('play-btn').textContent = '▶';
+    clearInterval(timer);
+  }
+  function restartAutoplay(){ if(playing){ startAutoplay(); } }
+
+  document.getElementById('prev-btn').addEventListener('click', () => goTo(current - 1, true));
+  document.getElementById('next-btn').addEventListener('click', () => goTo(current + 1, true));
+  document.getElementById('play-btn').addEventListener('click', () => {
+    if(playing) stopAutoplay(); else startAutoplay();
+  });
+
+  // open seal
+  function openSeal(){
+    stage.classList.add('opened');
+    setTimeout(() => {
+      goTo(1);
+      controls.classList.remove('hidden');
+      startAutoplay();
+    }, 850);
+  }
+  document.getElementById('seal-scene').addEventListener('click', function handler(){
+    this.removeEventListener('click', handler);
+    openSeal();
+  });
+
+  // embers
+  const embersWrap = document.getElementById('embers');
+  function spawnEmber(){
+    const e = document.createElement('div');
+    e.className = 'ember';
+    const size = 2 + Math.random()*4;
+    e.style.width = size + 'px';
+    e.style.height = size + 'px';
+    e.style.left = (Math.random()*100) + '%';
+    e.style.setProperty('--drift', (Math.random()*80 - 40) + 'px');
+    const dur = 6 + Math.random()*6;
+    e.style.animationDuration = dur + 's';
+    embersWrap.appendChild(e);
+    setTimeout(() => e.remove(), dur*1000 + 200);
+  }
+  setInterval(spawnEmber, 350);
+  for(let i=0;i<10;i++) setTimeout(spawnEmber, i*150);
+
+  // countdown — EDITABLE TARGET DATE
+  const targetDate = new Date('2026-11-14T19:00:00');
+  function updateCountdown(){
+    const now = new Date();
+    let diff = targetDate - now;
+    if(diff < 0) diff = 0;
+    const d = Math.floor(diff / (1000*60*60*24));
+    const h = Math.floor((diff / (1000*60*60)) % 24);
+    const m = Math.floor((diff / (1000*60)) % 60);
+    const s = Math.floor((diff / 1000) % 60);
+    const pad = n => String(n).padStart(2,'0');
+    const dd = document.getElementById('cd-days');
+    const hh = document.getElementById('cd-hours');
+    const mm = document.getElementById('cd-min');
+    const ss = document.getElementById('cd-sec');
+    if(dd) dd.textContent = pad(d);
+    if(hh) hh.textContent = pad(h);
+    if(mm) mm.textContent = pad(m);
+    if(ss) ss.textContent = pad(s);
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // keyboard nav
+  document.addEventListener('keydown', (ev) => {
+    if(current === 0) return;
+    if(ev.key === 'ArrowRight') goTo(current+1, true);
+    if(ev.key === 'ArrowLeft') goTo(current-1, true);
+  });
+})();
+</script>
+
+</body>
+</html>
